@@ -1,0 +1,11 @@
+
+train: D:\Projects_\Tears_Check_YOLO12\dataset_all/train/images
+val:   D:\Projects_\Tears_Check_YOLO12\dataset_all/val/images
+test: D:\Projects_\Tears_Check_YOLO12\dataset_all/test/images
+
+# 类别数
+nc: 1
+
+# 类别名称列表
+names:
+  - break

@@ -1,0 +1,9 @@
+train: ../datasets\train\images
+val:   ../datasets\val\images
+test: ../datasets\test\images
+
+nc: 1
+
+# 类别名称列表
+names:
+  - break
