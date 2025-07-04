@@ -5,10 +5,14 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import math
+import typing as t
+from einops import rearrange
+
 
 from ultralytics.utils.torch_utils import fuse_conv_and_bn
 from .conv import Conv, DSConv, DWConv, GhostConv, LightConv, RepConv, autopad
 from .transformer import TransformerBlock
+from SCSA_attention import ODF
 
 __all__ = (
     "DFL",
@@ -53,7 +57,8 @@ __all__ = (
     "HyperACE", 
     "DownsampleConv", 
     "FullPAD_Tunnel",
-    "DSC3k2"
+    "DSC3k2",
+    "ODF"
 )
 
 

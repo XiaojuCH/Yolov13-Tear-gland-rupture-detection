@@ -1,4 +1,4 @@
-nc: 80 # number of classes
+nc: 1 # number of classes
 scales: # model compound scaling constants, i.e. 'model=yolov13n.yaml' will call yolov13.yaml with scale 'n'
   # [depth, width, max_channels]
   n: [0.50, 0.25, 1024]   # Nano
@@ -46,5 +46,7 @@ head:
   - [[-1, 14], 1, Concat, [1]] # cat head P5
   - [-1, 2, DSC3k2, [1024,True]] # 30 (P5/32-large)
   - [[-1, 11], 1, FullPAD_Tunnel, []]  
+  - [-1, 1, ODF,   [256, 8]]
+
   
   - [[23, 27, 31], 1, Detect, [nc]] # Detect(P3, P4, P5)

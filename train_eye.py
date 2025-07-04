@@ -2,25 +2,10 @@
 import os
 import sys
 import warnings
+from evaluator import monitor_features
 
 # 1. 首先解决 OpenMP 冲突
 os.environ['KMP_DUPLICATE_LIB_OK'] = 'TRUE'
-
-# 2. 过滤 FlashAttention 警告
-class FlashAttentionFilter:
-    def __init__(self):
-        self.original_stderr = sys.stderr
-    
-    def write(self, message):
-        # 过滤包含特定关键词的警告
-        if "FlashAttention is not available" not in message:
-            self.original_stderr.write(message)
-    
-    def flush(self):
-        self.original_stderr.flush()
-
-# 应用过滤器
-sys.stderr = FlashAttentionFilter()
 
 # 3. 忽略其他不重要的警告
 warnings.filterwarnings("ignore", category=UserWarning, module="albumentations")
@@ -42,6 +27,8 @@ if __name__ == '__main__':
     model.load("yolov13n.pt")  # 加载预训练权重
     project_dir = 'runs\detect'
     exp_name    = 'tears_check_yolo13n'
+    # model.add_callback("on_train_epoch_end", monitor_features)
+
 
     model.train(
         data=args.data,
@@ -49,6 +36,7 @@ if __name__ == '__main__':
         batch=args.batch,
         imgsz=args.imgsz,
         device=args.device,
+        
 
         # —————— 优化器 & 学习率调度 ——————
         optimizer='AdamW',

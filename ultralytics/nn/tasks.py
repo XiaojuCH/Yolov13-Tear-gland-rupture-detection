@@ -69,7 +69,8 @@ from ultralytics.nn.modules import (
     HyperACE,
     DownsampleConv,
     FullPAD_Tunnel,
-    DSC3k2
+    DSC3k2,
+    ODF
 )
 from ultralytics.utils import DEFAULT_CFG_DICT, DEFAULT_CFG_KEYS, LOGGER, colorstr, emojis, yaml_load
 from ultralytics.utils.checks import check_requirements, check_suffix, check_yaml
@@ -1003,7 +1004,8 @@ def parse_model(d, ch, verbose=True):  # model_dict, input_channels(3)
             C2fCIB,
             A2C2f,
             DSC3k2,
-            DSConv
+            DSConv,
+            ODF
         }:
             c1, c2 = ch[f], args[0]
             if c2 != nc:  # if c2 not equal to number of classes (i.e. for Classify() output)
@@ -1095,6 +1097,12 @@ def parse_model(d, ch, verbose=True):  # model_dict, input_channels(3)
                 c2 =c1
         elif m is FullPAD_Tunnel:
             c2 = ch[f[0]]
+        elif m is ODF:
+            c1 = ch[f]         # 获取输入通道
+            c2 = c1            # ODF 模块不会改变通道数
+            print(f"[DEBUG] Raw ODF args: {args}")
+            args = [c1, *args]  # 插入 c1 = dim 作为第一个参数
+            print(f"[DEBUG] Final ODF args: {args}")
         else:
             c2 = ch[f]
 

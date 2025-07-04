@@ -61,7 +61,8 @@ from .block import (
     HyperACE,
     DownsampleConv,
     FullPAD_Tunnel,
-    DSC3k2
+    DSC3k2,
+    ODF
 )
 from .conv import (
     CBAM,
@@ -172,4 +173,5 @@ __all__ = (
     "FullPAD_Tunnel",
     "DSC3k2",
     "DSConv"
+    "ODF"
 )

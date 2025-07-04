@@ -1,6 +1,34 @@
 # evaluator.py — 评估 mAP/Precision/Recall
 import argparse
 from ultralytics import YOLO
+from ultralytics.nn.modules.block import ODF
+
+
+# 注册特征监控回调
+def monitor_features(trainer):
+    # 获取ODF模块
+    for module in trainer.model.modules():
+        if isinstance(module, ODF):
+            # 获取特征
+            input_features, output_features = module.get_features()
+            
+            if input_features is not None and output_features is not None:
+                # 计算特征变化
+                input_mean = input_features.mean().item()
+                output_mean = output_features.mean().item()
+                input_std = input_features.std().item()
+                output_std = output_features.std().item()
+                
+                # 记录到TensorBoard
+                trainer.tblogger.add_scalar('ODF/input_mean', input_mean, trainer.epoch)
+                trainer.tblogger.add_scalar('ODF/output_mean', output_mean, trainer.epoch)
+                trainer.tblogger.add_scalar('ODF/input_std', input_std, trainer.epoch)
+                trainer.tblogger.add_scalar('ODF/output_std', output_std, trainer.epoch)
+                
+                # 重置特征
+                module.input_features = None
+                module.output_features = None
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -18,3 +46,4 @@ if __name__ == '__main__':
     print(f"mAP:       {metrics['metrics/mAP50-95']:.4f}")
     print(f"Precision:{metrics['metrics/precision']:.4f}")
     print(f"Recall:   {metrics['metrics/recall']:.4f}")
+
