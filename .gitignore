@@ -5,3 +5,6 @@ runs/*
 tests/*
 
 ./flash_attn-2.5.9.post1+cu122torch2.3.1cxx11abiFALSE-cp311-cp311-win_amd64.whl
+
+./train.py
+./train_ip102.py
