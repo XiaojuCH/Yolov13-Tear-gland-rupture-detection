@@ -56,7 +56,7 @@ def main():
 
         pred_cls = int(r.boxes.cls[0].item())
 
-        if pred_cls != gt_cls:
+        if pred_cls == gt_cls:
             gt_name = names[gt_cls]
             new_img_name = f"错误_{gt_name}_{stem}.jpg"
             new_lbl_name = f"错误_{gt_name}_{stem}.txt"
