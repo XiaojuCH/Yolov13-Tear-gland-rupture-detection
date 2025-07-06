@@ -56,8 +56,8 @@ def load_gt_boxes(label_path, img_w, img_h):
 if __name__ == "__main__":
     # —— 配置区域 —— #
     # 权重目录
-    weights_dir = Path(r"D:\Projects_\Tears_Check_YOLO13_fix\yolov13-main\runs\ip102\yolo13n_ip102_atten_pruned\weights")
-    best_weights = sorted(weights_dir.glob("best.pt"))[-1]
+    weights_dir = Path("./")
+    best_weights = sorted(weights_dir.glob("best_cn.pt"))[-1]
     print(f"使用权重: {best_weights}")
     
     # 中文字体配置
@@ -65,11 +65,11 @@ if __name__ == "__main__":
     FONT_SIZE = 18
     
     # 测试图片和标签所在子目录（相对于项目根目录）
-    test_images_dir = Path('D:\Projects_\Tears_Check_YOLO13_fix\yolov13-main\datasets_ip102_pruned_45_test\images')
-    test_labels_dir = Path('D:\Projects_\Tears_Check_YOLO13_fix\yolov13-main\datasets_ip102_pruned_45_test\labels')
+    test_images_dir = Path('D:\Projects_\IP102_YOLO\dataset\Detection\IP102\images/test1')
+    test_labels_dir = Path('D:\Projects_\IP102_YOLO\dataset\Detection\IP102\labels/test1')
     
     # 输出目录
-    base_out = Path("runs/ip102_45/compare")
+    base_out = Path("runs/ip102/compare")
     correct_dir = base_out / "correct"
     incorrect_dir = base_out / "incorrect"
     for d in (base_out, correct_dir, incorrect_dir):
@@ -83,8 +83,12 @@ if __name__ == "__main__":
     total = 0
     n_correct = 0
     
+    # 预先加载一次模型以获取类别名称
+    temp_results = model.predict(source="https://ultralytics.com/images/bus.jpg", verbose=False)
+    class_names = temp_results[0].names
+    
     for img_path in img_paths:
-        total += 1000
+        total += 1
         # 读取图片获取尺寸
         img = cv2.imread(str(img_path))
         if img is None:
@@ -101,10 +105,25 @@ if __name__ == "__main__":
         # 读取真实框
         gt = load_gt_boxes(label_path, img_w, img_h)
         gt_classes = {c for c, *_ in gt}
+        gt_class_names = [class_names[c] for c in gt_classes]
+
+        print(f"图片: {img_path.name}")
+        print(f"真实标签: {', '.join(gt_class_names)}")
         
         # 模型推理
         results = model.predict(source=str(img_path), conf=0.25, imgsz=max(img_w, img_h))
         r = results[0]
+        
+        # 收集预测类别
+        pred_classes = set()
+        pred_class_names = []
+        for box in r.boxes:
+            cls_id = int(box.cls[0].item())
+            pred_classes.add(cls_id)
+            pred_class_names.append(class_names[cls_id])
+        
+        print(f"预测标签: {', '.join(pred_class_names)}")
+        print("-" * 50)  # 分隔线
         
         # 使用空白图像作为画布
         annotated = img.copy()
@@ -114,7 +133,7 @@ if __name__ == "__main__":
             x1, y1, x2, y2 = map(int, box.xyxy[0])
             conf = box.conf[0].item()
             cls_id = int(box.cls[0].item())
-            class_name = r.names[cls_id]
+            class_name = class_names[cls_id]
             
             # 绘制边界框
             cv2.rectangle(annotated, (x1, y1), (x2, y2), (0, 255, 0), 2)
@@ -132,7 +151,7 @@ if __name__ == "__main__":
         
         # 绘制真实框 (蓝色)
         for cls_id, x1, y1, x2, y2 in gt:
-            class_name = r.names[cls_id]
+            class_name = class_names[cls_id]
             
             # 绘制边界框
             cv2.rectangle(annotated, (x1, y1), (x2, y2), (255, 0, 0), 2)
@@ -147,9 +166,6 @@ if __name__ == "__main__":
                 font_size=FONT_SIZE,
                 color=(255, 0, 0)
             )
-        
-        # 收集预测类别
-        pred_classes = {int(x) for x in r.boxes.cls.tolist()}
         
         # 判断"全对"——预测类别集合等于真实类别集合
         correct = (pred_classes == gt_classes)

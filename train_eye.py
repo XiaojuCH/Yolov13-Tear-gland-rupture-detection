@@ -18,7 +18,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--data',   type=str, default='configs/tear.yaml')
     parser.add_argument('--epochs', type=int, default=60)
-    parser.add_argument('--batch',  type=int, default=24)
+    parser.add_argument('--batch',  type=int, default=12)
     parser.add_argument('--imgsz',  type=int, default=640)
     parser.add_argument('--device', type=str, default='0')
     args = parser.parse_args()
