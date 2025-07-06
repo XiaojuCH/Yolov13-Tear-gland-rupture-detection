@@ -172,6 +172,6 @@ __all__ = (
     "DownsampleConv",
     "FullPAD_Tunnel",
     "DSC3k2",
-    "DSConv"
+    "DSConv",
     "ODF"
 )
