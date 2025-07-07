@@ -9,3 +9,4 @@ tests/*
 ./train.py
 ./train_ip102.py
 ./IP102/*
+IP102
