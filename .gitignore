@@ -8,6 +8,4 @@ tests/*
 
 ./train.py
 ./train_ip102.py
-datasets_ip102_pruned/*
-datasets_ip102_pruned_30/*
-datasets_ip102_pruned_45_test/*
+./IP102/*
