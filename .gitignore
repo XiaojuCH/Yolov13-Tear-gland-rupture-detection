@@ -10,3 +10,4 @@ tests/*
 ./train_ip102.py
 ./IP102/*
 IP102
+__pycache__/*
