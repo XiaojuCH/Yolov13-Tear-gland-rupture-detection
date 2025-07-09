@@ -1,7 +1,7 @@
 datasets/train/*
 datasets/val/*
 datasets/test/*
-datasets_new/*
+dataset_new\train_new_data_1000_balanced\test\*
 
 
 runs/*
