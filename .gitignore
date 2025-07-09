@@ -1,9 +1,8 @@
 datasets/train/*
 datasets/val/*
 datasets/test/*
-datasets_new/train/*
-datasets_new/val/*
-datasets_new/test/*
+datasets_new/*
+
 
 runs/*
 tests/*
