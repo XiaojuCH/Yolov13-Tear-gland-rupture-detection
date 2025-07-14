@@ -2,6 +2,7 @@ datasets/train/*
 datasets/val/*
 datasets/test/*
 dataset_new
+all_data/
 
 
 runs/*
