@@ -3,7 +3,11 @@ datasets/val/*
 datasets/test/*
 dataset_new
 all_data/
-
+final_all_data/
+all_data_final/
+video_/
+kangjie_mini_set/
+kangjie_mini_set_final/
 
 runs/*
 tests/*
